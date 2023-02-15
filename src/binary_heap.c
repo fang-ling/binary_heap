@@ -10,8 +10,8 @@
 
 #define var __auto_type
 
-/** Begin: Creating a heap */
-struct BinaryHeap *binary_heap_init(Int element_size,
+/** Begin: Creating a heap **/
+struct BinaryHeap* binary_heap_init(Int element_size,
                                     Int (*compare)(void* lhs, void* rhs)) {
     var heap = (struct BinaryHeap*)malloc(sizeof(struct BinaryHeap));
     heap -> count = 0;
@@ -21,4 +21,18 @@ struct BinaryHeap *binary_heap_init(Int element_size,
 
     return heap;
 }
-/** End: Creaing a heap */
+/** End: Creaing a heap **/
+
+/** Begin: Destroying a heap **/
+void binary_heap_deinit(struct BinaryHeap* heap) {
+    array_deinit(heap -> storage);
+    free(heap);
+}
+/** End: Destroying a heap **/
+
+/** Begin: Private helpers **/
+/* Index calculation functions */
+static inline Int left(Int i)   { return 2 * i + 1; }   /* Left child */
+static inline Int right(Int i)  { return 2 * i + 2; }   /* Right child */
+static inline Int parent(Int i) { return (i - 1) / 2; } /* Parent */
+/** End: Private helpers **/
