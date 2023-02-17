@@ -82,3 +82,40 @@ static void max_heapify_down(struct BinaryHeap* heap, Int i) {
     }
 }
 /** End: Private helpers **/
+
+/** Begin: Lookup **/
+/* Returns the largest element in a heap in constant time. */
+void* binary_heap_max(struct BinaryHeap* heap) {
+    if (heap -> is_empty) {
+        return NULL;
+    }
+    return array_get(heap -> storage, 0);
+}
+/** End: Lookup **/
+
+/** Begin: Insertion **/
+/* Inserts a new item into heap. */
+void binary_heap_insert(struct BinaryHeap* heap, void* key) {
+    /* This works by adding the new element into the end of the backing array
+     * and then bubbling it up to where it belongs in the heap.
+     */
+    heap -> is_empty = false;
+    heap -> count += 1;
+    array_append(heap -> storage, key);
+    max_heapify_up(heap, heap -> count - 1);
+}
+/** End: Insertion **/
+
+/** Begin: Removal **/
+/* Removes and Returns the max item in the heap */
+void* binary_heap_remove(struct BinaryHeap* heap) {
+    /* To remove the largest element at index 0. Exchange it with the last item
+     * in the array and then we trickle it down to where it belongs in the
+     * heap.
+     */
+    heap -> count -= 1;
+    array_swap_at(heap -> storage, 0, heap -> count);
+    max_heapify_down(heap, 0);
+    return array_remove_last(heap -> storage);
+}
+/** End: Removal **/
