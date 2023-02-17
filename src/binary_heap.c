@@ -47,9 +47,38 @@ static void max_heapify_up(struct BinaryHeap* heap, Int i) {
         /* Exchange i with parent(i) */
         array_swap_at(heap -> storage, i, parent(i));
         /* Current node is satisfy max heap property, but maybe not its
-         *  parent. Fix this recursively.
+         * parent. Fix this recursively.
          */
         max_heapify_up(heap, parent(i));
+    }
+}
+
+/* Maintain the max heap property from node i all the way down to left */
+static void max_heapify_down(struct BinaryHeap* heap, Int i) {
+    var j = 0ll;
+    /* Current i has both left and right children. */
+    /* Let j be one of these children, we want to maximize j.key */
+    if (left(i) < heap -> count && right(i) < heap -> count) {
+        j = heap -> compare(array_get(heap -> storage, left(i)),
+                            array_get(heap -> storage, right(i))) > 0
+            ? left(i) : right(i);
+    } else if (left(i) < heap -> count && right(i) >= heap -> count) {
+        /* Node i only has left child. */
+        j = left(i);
+    } else if (left(i) >= heap -> count && right(i) < heap -> count) {
+        /* Node i only has right child. */
+        j = right(i);
+    } else {
+        /* Node i has zero child. i.e. Node i is a leaf node. We are done. */
+        return;
+    }
+    /* If i is smaller than j (i's largest child), we are violate the max
+     * heap property. Fix it by swap i.key with j.key and then recur on j.
+     */
+    if (heap -> compare(array_get(heap -> storage, i),
+                        array_get(heap -> storage, j)) <= 0) {
+        array_swap_at(heap -> storage, i, j);
+        max_heapify_down(heap, j);
     }
 }
 /** End: Private helpers **/
